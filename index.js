@@ -81,7 +81,7 @@ async function fetchComments(auth, VIDEO_ID) {
                 console.log(`🚨 Spam detected: "${commentText}"`);
                 spamComments.push(commentId);
                 await logSpam(VIDEO_ID, commentText);
-                fs.appendFileSync("spam-log.txt", `[${new Date().toLocaleString()}] Spam: ${commentText}\n`); // save the comment to add in blackedword.json
+                fs.appendFileSync("spam-log-text.txt", `[${new Date().toLocaleString()}] Spam: ${commentText}\n`); // save the comment to add in blackedword.json
             }
             
         });
