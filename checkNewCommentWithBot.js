@@ -1,16 +1,11 @@
 // checkNewCommentWithBot.js
 const fs = require("fs");
-const path = require("path");
-
 const updateBlockedWords = () => {
-    const logPath = path.join(__dirname, "spam-log.json");
-    const blockedPath = path.join(__dirname, "blockedword.json");
+    if (!fs.existsSync("spam-log.json")) return;
 
-    if (!fs.existsSync(logPath)) return;
-
-    const logData = JSON.parse(fs.readFileSync(logPath));
-    const blockedWords = fs.existsSync(blockedPath)
-        ? JSON.parse(fs.readFileSync(blockedPath))
+    const logData = JSON.parse(fs.readFileSync("spam-log.json"));
+    const blockedWords = fs.existsSync("blockedword.json")
+        ? JSON.parse(fs.readFileSync("blockedword.json"))
         : [];
 
     const wordSet = new Set(blockedWords.map(w => w.toLowerCase()));
@@ -38,7 +33,7 @@ const updateBlockedWords = () => {
 
     if (newWords.size > 0) {
         const updatedWords = [...wordSet, ...newWords];
-        fs.writeFileSync(blockedPath, JSON.stringify(updatedWords, null, 2));
+        fs.writeFileSync("blockedword.json", JSON.stringify(updatedWords, null, 2));
         console.log(`🆕 Added ${newWords.size} new blocked words.`);
     } else {
         console.log("✅ No new words to add.");
