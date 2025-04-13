@@ -2,6 +2,8 @@ require("dotenv").config();
 const fs = require("fs");
 const readline = require("readline");
 const { google } = require("googleapis");
+const logSpam = require('./logSpam');
+const updateBlockedWords = require('./checkNewCommentWithBot');
 
 // Load client secrets from credentials.json
 const SCOPES = ["https://www.googleapis.com/auth/youtube.force-ssl"];
@@ -78,6 +80,7 @@ async function fetchComments(auth, VIDEO_ID) {
             if (getJudolComment(commentText)) {
                 console.log(`🚨 Spam detected: "${commentText}"`);
                 spamComments.push(commentId);
+                await logSpam(VIDEO_ID, commentText);
                 fs.appendFileSync("spam-log.txt", `[${new Date().toLocaleString()}] Spam: ${commentText}\n`); // save the comment to add in blackedword.json
             }
             
@@ -186,4 +189,7 @@ const checkAndDeleteSpamComments = async () => {
     }
 };
 checkAndDeleteSpamComments();
-setInterval(checkAndDeleteSpamComments, 1000 * 60 * 60);
+setInterval(() => {
+    checkAndDeleteSpamComments();
+    updateBlockedWords();
+}, 1000 * 60 * 60);
