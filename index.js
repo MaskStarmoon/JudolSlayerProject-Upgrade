@@ -172,7 +172,7 @@ async function youtubeContentList(auth) {
             console.log("✅ No spam comments found.");
         }
     }
-    
+    console.log(`\n🔍 Done check: ${contentList.length} video.`);
         
     } catch (error) {
         console.error("Error running script:", error);
