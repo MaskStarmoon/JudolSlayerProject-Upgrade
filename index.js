@@ -8,6 +8,11 @@ const SCOPES = ["https://www.googleapis.com/auth/youtube.force-ssl"];
 const TOKEN_PATH = "token.json";
 const youtubeChannelID = process.env.YOUTUBE_CHANNEL_ID; // Replace with your video ID
 
+if (!youtubeChannelID) {
+    console.error("❌ Missing YOUTUBE_CHANNEL_ID in .env");
+    process.exit(1);
+}
+
 // Load OAuth 2.0 client
 async function authorize() {
     const credentials = JSON.parse(fs.readFileSync("credentials.json"));
@@ -73,6 +78,7 @@ async function fetchComments(auth, VIDEO_ID) {
             if (getJudolComment(commentText)) {
                 console.log(`🚨 Spam detected: "${commentText}"`);
                 spamComments.push(commentId);
+                fs.appendFileSync("spam-log.txt", `[${new Date().toLocaleString()}] Spam: ${commentText}\n`); // save the comment to add in blackedword.json
             }
             
         });
@@ -153,7 +159,7 @@ async function youtubeContentList(auth) {
     }
 }
 
-(async () => {
+const checkAndDeleteSpamComments = async () => {
     try {
         const auth = await authorize();
         const contentList = await youtubeContentList(auth);
@@ -172,9 +178,12 @@ async function youtubeContentList(auth) {
             console.log("✅ No spam comments found.");
         }
     }
-    console.log(`\n🔍 Done check: ${contentList.length} video.`);
+    console.log(`\n🔍 Done checking ${contentList.length} video.`);
+    console.log(`⏰ Checked at: ${new Date().toLocaleString()}`);
         
     } catch (error) {
         console.error("Error running script:", error);
     }
-})();
+};
+checkAndDeleteSpamComments();
+setInterval(checkAndDeleteSpamComments, 1000 * 60 * 60);
