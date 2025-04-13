@@ -4,7 +4,7 @@
   "description": "<h1>Berikut adalah panduan lengkap program pembasmi komen judol</h1>",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
