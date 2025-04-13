@@ -17,7 +17,7 @@ const updateBlockedWords = () => {
     for (const entry of logData) {
         const words = entry.comment
             .toLowerCase()
-            .replace(/[^\w\s]/gi, '') // hapus simbol
+            .replace(/[^\w\s]/gi, '')
             .split(/\s+/);
 
         for (const word of words) {
