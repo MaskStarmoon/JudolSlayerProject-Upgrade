@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "fs": "^0.0.1-security",
     "dotenv": "^16.4.7",
     "googleapis": "^148.0.0"
   }
